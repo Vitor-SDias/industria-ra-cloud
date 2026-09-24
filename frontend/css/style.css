@@ -4,36 +4,66 @@ body {
   font-family: Arial, sans-serif;
 }
 
+/* Camada da interface gráfica sobreposta ao WebAR */
+#ui-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999; /* Garante que fica acima da câmara e do canvas 3D do A-Frame */
+  pointer-events: none; /* Permite interagir com a câmara onde não há elementos de interface */
+}
+
+/* Força que o botão de ver telemetria e o card recebam cliques/toques */
+#hotspot-btn,
+.card {
+  pointer-events: auto;
+}
+
+/* Estilo do Card de Telemetria */
 .card {
   position: absolute;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 999;
-  background: rgba(15, 23, 42, 0.9);
+  z-index: 10000;
+  background: rgba(15, 23, 42, 0.95);
   color: #ffffff;
   padding: 15px 25px;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   min-width: 240px;
   text-align: center;
+  border: 1px solid rgba(56, 189, 248, 0.3);
 }
 
 .card.hidden {
-  display: none;
+  display: none !important;
 }
 
 .card h3 {
   margin-top: 0;
   color: #38bdf8;
+  margin-bottom: 10px;
+}
+
+.card p {
+  margin: 8px 0;
+  font-size: 14px;
 }
 
 .card button {
-  margin-top: 10px;
+  margin-top: 12px;
   background-color: #ef4444;
   color: white;
   border: none;
-  padding: 6px 14px;
+  padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
+  font-weight: bold;
+}
+
+.card button:hover {
+  background-color: #dc2626;
 }

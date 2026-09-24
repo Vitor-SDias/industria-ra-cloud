@@ -7,25 +7,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const vibVal = document.querySelector('#vib-val');
   const statusVal = document.querySelector('#status-val');
 
-  // Função para procurar telemetria da API Flask
+  // Função para buscar telemetria da API Flask ou gerar dados de simulação
   async function fetchTelemetry() {
     try {
-      const response = await fetch('http://localhost:5000/api/equipamentos/CNC-01/telemetria');
-      if (!response.ok) throw new Error('Erro na requisição');
-      
+      // Tenta buscar da API local com timeout rápido
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+      const response = await fetch('http://localhost:5000/api/equipamentos/CNC-01/telemetria', {
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) throw new Error('Erro na resposta');
+
       const data = await response.json();
       tempVal.textContent = data.temperatura ?? '--';
       vibVal.textContent = data.vibracao ?? '--';
       statusVal.textContent = data.status ?? 'ONLINE';
     } catch (err) {
-      console.error('Falha ao procurar dados da API:', err);
-      tempVal.textContent = 'Erro';
-      vibVal.textContent = 'Erro';
-      statusVal.textContent = 'Offline';
+      console.warn('API local offline ou inacessível via HTTPS. Exibindo dados de simulação WebAR.');
+      
+      // Dados simulados para apresentação/demo
+      tempVal.textContent = (42 + Math.random() * 5).toFixed(1);
+      vibVal.textContent = (2.1 + Math.random() * 0.8).toFixed(1);
+      statusVal.textContent = 'OPERANDO';
     }
   }
 
-  // Evento ao clicar no hotspot 3D
+  // Evento ao clicar no hotspot 3D / botão
   if (hotspotBtn) {
     hotspotBtn.addEventListener('click', () => {
       fetchTelemetry();

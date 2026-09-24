@@ -1,53 +1,54 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Torno CNC - Telemetria WebAR</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebAR - Torno CNC</title>
   
-  <!-- A-Frame e MindAR -->
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-  
-  <link rel="stylesheet" href="./css/style.css">
+  <!-- CSS Principal -->
+  <link rel="stylesheet" href="./css/style.css" />
+
+  <!-- Bibliotecas WebAR (A-Frame + MindAR) -->
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
 </head>
 <body>
 
-  <!-- Overlay UI para mostrar dados da API -->
-  <div id="telemetry-card" class="card hidden">
-    <h3>Torno CNC-01</h3>
-    <p><strong>Temperatura:</strong> <span id="temp-val">--</span> ºC</p>
-    <p><strong>Vibração:</strong> <span id="vib-val">--</span> mm/s</p>
-    <p><strong>Status:</strong> <span id="status-val">--</span></p>
-    <button id="close-btn">Fechar</button>
-  </div>
-
-  <!-- Cena A-Frame com MindAR -->
+  <!-- CENA 3D / REALIDADE AUMENTADA -->
   <a-scene 
-    mindar-image="imageTargetSrc: ./assets/targets/torno-cnc.mind; autoStart: true;" 
-    color-space="sRGB"
-    renderer="colorManagement: true, physicallyCorrectLights"
-    vr-mode-ui="enabled: false"
+    mindar-image="imageTargetSrc: ./assets/targets/torno-cnc.mind;" 
+    color-space="sRGB" 
+    renderer="colorManagement: true, physicallyCorrectLights" 
+    vr-mode-ui="enabled: false" 
     device-orientation-permission-ui="enabled: false">
     
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <!-- Target 0: Marcador da máquina -->
-    <a-entity id="target-cnc" mindar-image-target="targetIndex: 0">
-      <!-- Botão/Hotspot 3D interativo sobre o target -->
-      <a-plane 
-        id="hotspot-btn" 
-        position="0 0 0.1" 
-        height="0.3" 
-        width="0.8" 
-        color="#007bff" 
-        class="clickable"
-        text="value: Ver Telemetria; align: center; width: 2; color: #ffffff">
-      </a-plane>
+    <a-entity mindar-image-target="targetIndex: 0">
+      <a-plane src="./assets/images/torno-cnc.png" position="0 0 0" height="1" width="1" rotation="0 0 0"></a-plane>
     </a-entity>
-
   </a-scene>
 
+  <!-- CAMADA DE INTERFACE 2D (FORA DA TAG A-SCENE PARA RECEBER CLIQUES E TOQUES) -->
+  <div id="ui-container">
+    
+    <!-- Botão Principal de Telemetria -->
+    <button id="hotspot-btn" type="button">Ver Telemetria</button>
+
+    <!-- Card de Dados do Torno CNC -->
+    <div id="telemetry-card" class="card hidden">
+      <h3>Torno CNC - Telemetria</h3>
+      <div class="card-content">
+        <p><strong>Temperatura:</strong> <span id="temp-val">--</span> ºC</p>
+        <p><strong>Vibração:</strong> <span id="vib-val">--</span> mm/s</p>
+        <p><strong>Status:</strong> <span id="status-val">--</span></p>
+      </div>
+      <button id="close-btn" type="button">Fechar</button>
+    </div>
+
+  </div>
+
+  <!-- JavaScript do Frontend -->
   <script src="./js/app.js"></script>
 </body>
 </html>
